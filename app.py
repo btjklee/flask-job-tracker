@@ -2,6 +2,11 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Welcome to the Job Tracker API! Use endpoints like /add, /jobs, /update/<id>, and /delete/<id>."
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///jobs.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
