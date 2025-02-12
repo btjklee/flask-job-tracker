@@ -11,6 +11,9 @@ A simple web-based job tracking application to manage job applications efficient
 - REST API endpoints for easy integration
 - Responsive UI with Bootstrap
 
+## 🖥️ Screenshot
+![Job Tracker Screenshot](job-tracker-screenshot.png)
+
 ## 💻 Tech Stack
 - **Backend**: Flask (Python)
 - **Database**: PostgreSQL
