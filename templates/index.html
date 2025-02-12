@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Job Tracker</h2>
+        
+        <!-- Form to Add Job -->
+        <form id="jobForm" class="mb-4">
+            <div class="mb-3">
+                <label for="company" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company" required>
+            </div>
+            <div class="mb-3">
+                <label for="position" class="form-label">Position</label>
+                <input type="text" class="form-control" id="position" required>
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-control" id="status">
+                    <option value="Applied">Applied</option>
+                    <option value="Interview Scheduled">Interview Scheduled</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Offer Received">Offer Received</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="notes" class="form-label">Notes</label>
+                <textarea class="form-control" id="notes"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Job</button>
+        </form>
+
+        <!-- Job List -->
+        <h3>Job Applications</h3>
+        <ul id="jobList" class="list-group"></ul>
+    </div>
+
+    <script>
+        const apiBaseUrl = "https://flask-job-tracker.onrender.com";
+        
+        // Fetch and display jobs
+        function fetchJobs() {
+            fetch(`${apiBaseUrl}/jobs`)
+                .then(response => response.json())
+                .then(data => {
+                    const jobList = document.getElementById("jobList");
+                    jobList.innerHTML = "";
+                    data.forEach(job => {
+                        const jobItem = document.createElement("li");
+                        jobItem.className = "list-group-item d-flex justify-content-between align-items-center";
+                        jobItem.innerHTML = `
+                            <div>
+                                <strong>${job.position}</strong> at ${job.company} <br>
+                                Status: ${job.status} <br>
+                                Notes: ${job.notes}
+                            </div>
+                            <button class="btn btn-danger btn-sm" onclick="deleteJob(${job.id})">Delete</button>
+                        `;
+                        jobList.appendChild(jobItem);
+                    });
+                });
+        }
+        
+        // Add new job
+        document.getElementById("jobForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const jobData = {
+                company: document.getElementById("company").value,
+                position: document.getElementById("position").value,
+                status: document.getElementById("status").value,
+                notes: document.getElementById("notes").value
+            };
+            fetch(`${apiBaseUrl}/add`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(jobData)
+            }).then(response => response.json()).then(() => fetchJobs());
+        });
+        
+        // Delete job
+        function deleteJob(id) {
+            fetch(`${apiBaseUrl}/delete/${id}`, { method: "DELETE" })
+                .then(response => response.json())
+                .then(() => fetchJobs());
+        }
+        
+        fetchJobs();
+    </script>
+</body>
+</html>

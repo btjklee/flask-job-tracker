@@ -1,15 +1,15 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Welcome to the Job Tracker API! Use endpoints like /add, /jobs, /update/<id>, and /delete/<id>."
+    return render_template('index.html')
 
-# Use PostgreSQL from Render
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')  # Store in env vars
+# Use DATABASE_URL from Render's environment variables
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
