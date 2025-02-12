@@ -46,6 +46,18 @@ def get_jobs():
     jobs = JobApplication.query.all()
     return jsonify([{ "id": job.id, "company": job.company, "position": job.position, "status": job.status, "notes": job.notes } for job in jobs])
 
+# Route to Get a Single Job Application by ID
+@app.route('/jobs/<int:id>', methods=['GET'])
+def get_job(id):
+    job = JobApplication.query.get_or_404(id)
+    return jsonify({
+        "id": job.id,
+        "company": job.company,
+        "position": job.position,
+        "status": job.status,
+        "notes": job.notes
+    })
+
 # Route to Update a Job Application Status
 @app.route('/update/<int:id>', methods = ['PUT'])
 def update_job(id):
